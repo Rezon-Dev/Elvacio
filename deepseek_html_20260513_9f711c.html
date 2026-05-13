@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EL VACÍO — Ghost Luxury</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+
+    <!-- Google Fonts: Playfair Display (Serif) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'serif': ['Playfair Display', 'Georgia', 'Times New Roman', 'serif'],
+                        'sans': ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    },
+                    colors: {
+                        'void': '#050505',
+                        'void-light': '#0a0a0a',
+                        'void-card': '#0d0d0d',
+                        'void-border': '#1a1a1a',
+                        'ghost': '#e5e5e5',
+                        'ghost-dim': '#888888',
+                        'ghost-faint': '#555555',
+                        'gold': '#c5a550',
+                        'gold-dim': '#a68a3e',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --void: #050505;
+            --ghost: #e5e5e5;
+            --gold: #c5a550;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background-color: var(--void);
+        }
+
+        body {
+            background-color: #050505;
+            font-family: 'Inter', 'Helvetica Neue', 'Arial', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Subtle fade-in for sections */
+        .section-fade {
+            animation: fadeUp 0.6s ease-out both;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Card hover */
+        .card-ghost {
+            transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        .card-ghost:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px -20px rgba(197, 165, 80, 0.08);
+            border-color: #2a2a2a;
+        }
+        .card-ghost:hover .card-image img {
+            transform: scale(1.03);
+        }
+        .card-image img {
+            transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        /* Modal backdrop */
+        .modal-backdrop {
+            animation: fadeIn 0.25s ease-out both;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .modal-panel {
+            animation: modalSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(32px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1a1a1a;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2a2a2a;
+        }
+
+        /* Input styles */
+        input {
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #c5a550;
+            box-shadow: 0 0 0 1px rgba(197, 165, 80, 0.15);
+        }
+
+        /* Active nav link */
+        .nav-link.active {
+            color: #c5a550;
+            position: relative;
+        }
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 18px;
+            height: 1px;
+            background: #c5a550;
+            opacity: 0.8;
+        }
+
+        /* Gold ornamental line */
+        .gold-line {
+            width: 1px;
+            background: var(--gold);
+            opacity: 0.4;
+        }
+        .gold-line-horizontal {
+            height: 1px;
+            width: 48px;
+            background: var(--gold);
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body class="bg-[#050505] text-[#e5e5e5] min-h-screen font-sans">
+
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-[#050505]/75 backdrop-blur-xl border-b border-[#1a1a1a]">
+        <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+            <div class="flex items-center justify-between h-16 sm:h-18 lg:h-20">
+                <!-- Brand -->
+                <a href="#" onclick="navigateTo('home'); return false;"
+                class="font-serif text-xl sm:text-2xl lg:text-3xl font-semibold tracking-[0.15em] text-white hover:text-[#c5a550] transition-colors select-none">
+                EL&nbsp;VACÍO
+            </a>
+            <!-- Nav Links -->
+            <div class="flex items-center gap-6 sm:gap-8 lg:gap-10">
+                <a href="#" onclick="navigateTo('home'); return false;"
+                class="nav-link text-xs sm:text-sm uppercase tracking-[0.2em] text-[#888] hover:text-[#c5a550] transition-colors pb-1"
+                data-page="home" id="nav-home">HOME</a>
+                <a href="#" onclick="navigateTo('archive'); return false;"
+                class="nav-link text-xs sm:text-sm uppercase tracking-[0.2em] text-[#888] hover:text-[#c5a550] transition-colors pb-1"
+                data-page="archive" id="nav-archive">ARCHIVE</a>
+                <a href="#" onclick="navigateTo('manifesto'); return false;"
+                class="nav-link text-xs sm:text-sm uppercase tracking-[0.2em] text-[#888] hover:text-[#c5a550] transition-colors pb-1"
+                data-page="manifesto" id="nav-manifesto">MANIFESTO</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Spacer for fixed navbar -->
+<div class="h-16 sm:h-18 lg:h-20"></div>
+
+<!-- ==================== HOME SECTION ==================== -->
+<section id="section-home" class="section-fade">
+    <!-- ★ GOLDEN NOIR HERO ★ -->
+    <div class="flex flex-col items-center justify-center text-center min-h-[calc(100vh-4rem)] sm:min-h-[calc(100vh-5rem)] lg:min-h-[calc(100vh-6rem)] px-5 sm:px-8 lg:px-12 relative">
+        <!-- Top gold vertical line -->
+        <div class="gold-line h-16 sm:h-20 mb-6"></div>
+
+        <h1 class="font-serif text-6xl sm:text-7xl lg:text-8xl text-[#c5a550] tracking-[0.12em] leading-none animate-pulse">
+            EL VACÍO
+        </h1>
+
+        <p class="mt-5 sm:mt-6 text-lg sm:text-2xl lg:text-3xl text-[#c5a550]/80 italic tracking-[0.06em] font-light">
+            donde el silencio es oro
+        </p>
+
+        <p class="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#c5a550]/50 mt-3 font-sans">
+            GHOST LUXURY
+        </p>
+
+        <!-- Bottom gold horizontal line + scroll hint -->
+        <div class="flex flex-col items-center mt-10 sm:mt-12">
+            <div class="gold-line-horizontal mb-3"></div>
+            <svg class="w-4 h-4 text-[#c5a550]/30 animate-bounce" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M19 9l-7 7-7-7"></path>
+            </svg>
+        </div>
+    </div>
+
+    <!-- PRODUCT GRID (appears after scrolling) -->
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-10 lg:py-16">
+        <p class="text-[10px] sm:text-[11px] uppercase tracking-[0.35em] text-[#555] mb-8 lg:mb-12 font-sans">
+            Selección actual — <span class="italic normal-case tracking-normal text-[#666]">Current Selection</span>
+        </p>
+
+        <!-- Product Grid: 2 cols mobile, 4 cols PC -->
+        <div id="grid-trending" class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+            <!-- Rendered by JS -->
+        </div>
+    </div>
+
+    <!-- ==================== MANIFESTO SECTION (Home bottom) ==================== -->
+    <div id="manifesto-section"
+    class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 mt-24 lg:mt-36 border-t border-[#1a1a1a] pt-16 lg:pt-24 pb-8">
+    <p class="text-[10px] sm:text-[11px] uppercase tracking-[0.35em] text-[#555] mb-10 lg:mb-14 font-sans">
+        Manifiesto — <span class="italic normal-case tracking-normal text-[#666]">Manifesto</span>
+    </p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
+        <!-- Block 1 -->
+        <div class="space-y-3">
+            <p class="font-serif text-xl sm:text-2xl lg:text-3xl text-white leading-relaxed">
+                &ldquo;El silencio es la única prenda que no se rompe.&rdquo;
+            </p>
+            <p class="text-sm text-[#666] italic leading-relaxed">
+                Silence is the only garment that doesn't break.
+            </p>
+        </div>
+        <!-- Block 2 -->
+        <div class="space-y-3">
+            <p class="font-serif text-xl sm:text-2xl lg:text-3xl text-white leading-relaxed">
+                &ldquo;Vestimos la ausencia como quien viste la noche.&rdquo;
+            </p>
+            <p class="text-sm text-[#666] italic leading-relaxed">
+                We wear absence like one wears the night.
+            </p>
+        </div>
+        <!-- Block 3 -->
+        <div class="space-y-3">
+            <p class="font-serif text-xl sm:text-2xl lg:text-3xl text-white leading-relaxed">
+                &ldquo;No hay lujo más profundo que desaparecer.&rdquo;
+            </p>
+            <p class="text-sm text-[#666] italic leading-relaxed">
+                There is no deeper luxury than disappearing.
+            </p>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- ==================== ARCHIVE SECTION ==================== -->
+<section id="section-archive" class="section-fade max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-10 lg:py-16 hidden">
+    <p class="text-[10px] sm:text-[11px] uppercase tracking-[0.35em] text-[#555] mb-8 lg:mb-12 font-sans">
+        Archivo completo — <span class="italic normal-case tracking-normal text-[#666]">Complete Archive</span>
+    </p>
+    <div id="grid-archive" class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+        <!-- Rendered by JS -->
+    </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="border-t border-[#1a1a1a] mt-12 lg:mt-20 py-8 lg:py-10">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 text-center">
+        <p class="font-serif text-lg sm:text-xl text-[#c5a550] tracking-[0.12em] mb-2">EL VACÍO</p>
+        <p class="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#444]">
+            Ghost Luxury &copy; <span id="current-year"></span>
+        </p>
+        <p class="text-[10px] text-[#333] mt-3 italic">
+            Prepago exclusivo — <span class="not-italic">Exclusive Prepaid</span>
+        </p>
+    </div>
+</footer>
+
+<!-- ==================== CHECKOUT MODAL ==================== -->
+<div id="checkout-modal"
+class="modal-backdrop fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden"
+onclick="closeModalOutside(event)">
+<div class="modal-panel bg-[#0d0d0d] border border-[#1a1a1a] rounded-none w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl"
+onclick="event.stopPropagation()">
+<div class="sticky top-0 bg-[#0d0d0d] border-b border-[#1a1a1a] px-5 py-4 flex items-center justify-between z-10">
+    <p class="font-serif text-lg text-[#c5a550] tracking-[0.08em]">Adquirir</p>
+    <button onclick="closeModal()"
+    class="text-[#555] hover:text-white transition-colors text-2xl leading-none p-1">&times;</button>
+</div>
+<div class="p-5 sm:p-6 space-y-6">
+    <div class="aspect-square w-full max-w-[280px] mx-auto overflow-hidden border border-[#1a1a1a]">
+        <img id="modal-product-image" src="" alt="" class="w-full h-full object-cover" />
+    </div>
+    <div class="text-center space-y-1">
+        <h3 id="modal-product-name" class="font-serif text-xl sm:text-2xl text-[#c5a550] tracking-[0.06em]"></h3>
+        <p id="modal-product-name-en" class="text-sm text-[#666] italic"></p>
+        <p id="modal-product-description" class="text-sm text-[#888] mt-2 leading-relaxed max-w-sm mx-auto"></p>
+        <p id="modal-product-price" class="text-lg text-white font-light tracking-[0.04em] mt-3"></p>
+    </div>
+    <form id="checkout-form" onsubmit="handleCheckout(event)" class="space-y-4" novalidate>
+        <div>
+            <label class="block text-[11px] uppercase tracking-[0.2em] text-[#666] mb-1.5">
+                Nombre completo <span class="italic normal-case text-[#444] text-[10px]">— Full Name</span>
+            </label>
+            <input type="text" id="form-name" required
+            class="w-full bg-[#0a0a0a] border border-[#1a1a1a] text-white px-4 py-3 text-sm placeholder-[#333] focus:border-[#c5a550] transition-colors"
+            placeholder="Ej. Adriana Reyes" />
+        </div>
+        <div>
+            <label class="block text-[11px] uppercase tracking-[0.2em] text-[#666] mb-1.5">
+                Número de WhatsApp <span class="italic normal-case text-[#444] text-[10px]">— WhatsApp Number</span>
+            </label>
+            <input type="tel" id="form-whatsapp" required
+            class="w-full bg-[#0a0a0a] border border-[#1a1a1a] text-white px-4 py-3 text-sm placeholder-[#333] focus:border-[#c5a550] transition-colors"
+            placeholder="+91 98765 43210" />
+        </div>
+        <div>
+            <label class="block text-[11px] uppercase tracking-[0.2em] text-[#666] mb-1.5">
+                Dirección completa <span class="italic normal-case text-[#444] text-[10px]">— Full Address</span>
+            </label>
+            <input type="text" id="form-address" required
+            class="w-full bg-[#0a0a0a] border border-[#1a1a1a] text-white px-4 py-3 text-sm placeholder-[#333] focus:border-[#c5a550] transition-colors"
+            placeholder="Calle, Ciudad, Código Postal, País" />
+        </div>
+        <div class="bg-[#080808] border border-[#1a1a1a] p-4 space-y-2">
+            <p class="text-[10px] uppercase tracking-[0.25em] text-[#555]">Transferencia Prepago</p>
+            <p class="text-sm text-[#888]">Realice la transferencia al siguiente UPI:</p>
+            <p class="text-base sm:text-lg text-[#c5a550] font-mono tracking-[0.04em] bg-[#050505] px-3 py-2 border border-[#1a1a1a] select-all break-all">
+                rezonhaque123@okaxis
+            </p>
+            <p class="text-[10px] text-[#555] italic mt-1">
+                Adjunte captura de pantalla de la transacción al enviar el mensaje de WhatsApp.
+                <br /><span class="not-italic">— Attach transaction screenshot when sending the WhatsApp message.</span>
+            </p>
+        </div>
+        <button type="submit"
+        class="w-full bg-[#c5a550] text-black font-sans text-sm uppercase tracking-[0.2em] py-4 hover:bg-[#d4af5e] transition-colors font-medium">
+        Confirmar pago vía WhatsApp
+    </button>
+</form>
+</div>
+</div>
+</div>
+
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+    (function() {
+        const sectionHome = document.getElementById('section-home');
+        const sectionArchive = document.getElementById('section-archive');
+        const gridTrending = document.getElementById('grid-trending');
+        const gridArchive = document.getElementById('grid-archive');
+        const manifestoSection = document.getElementById('manifesto-section');
+        const checkoutModal = document.getElementById('checkout-modal');
+        const modalProductImage = document.getElementById('modal-product-image');
+        const modalProductName = document.getElementById('modal-product-name');
+        const modalProductNameEn = document.getElementById('modal-product-name-en');
+        const modalProductDescription = document.getElementById('modal-product-description');
+        const modalProductPrice = document.getElementById('modal-product-price');
+        const formName = document.getElementById('form-name');
+        const formWhatsapp = document.getElementById('form-whatsapp');
+        const formAddress = document.getElementById('form-address');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const currentYearSpan = document.getElementById('current-year');
+
+        let currentPage = 'home';
+        let allProducts = [];
+        let currentCheckoutProduct = null;
+
+        const translations = {
+            'SOMBRA LÍQUIDA': { nameEn: 'Liquid Shadow',
+                descEn: 'A black silk dress that flows like a shadow over the body.' },
+            'HUESO BLANCO': { nameEn: 'White Bone',
+                descEn: 'Structured ivory coat with sharp architectural lines.' },
+            'SILENCIO ETERNO': { nameEn: 'Eternal Silence',
+                descEn: 'Minimal charcoal sweater in the finest merino wool.' },
+            'VACÍO NEGRO': { nameEn: 'Black Void',
+            descEn: 'Asymmetric black trousers that redefine the silhouette.' },
+            'CENIZA': { nameEn: 'Ash', descEn: 'Grey wool overcoat with a ghostly, weightless drape.' },
+            'PIEL FANTASMA': { nameEn: 'Ghost Skin',
+                descEn: 'Translucent silk blouse that hovers between presence and absence.' },
+            'AUSENCIA': { nameEn: 'Absence',
+                descEn: 'Minimalist black hoodie — the uniform of elegant disappearance.' },
+            'LUTO ELEGANTE': { nameEn: 'Elegant Mourning',
+                descEn: 'Black cashmere scarf, impossibly soft, like woven night air.' },
+            'NIEBLA': { nameEn: 'Mist',
+                descEn: 'Grey draped cardigan that dissolves the boundary between garment and wearer.' },
+            'ECLIPSE': { nameEn: 'Eclipse',
+                descEn: 'Black wool coat with a hidden silver lining — darkness with a secret.' },
+        };
+
+        const fallbackProducts = [{
+            id: 1,
+            name: 'SOMBRA LÍQUIDA',
+            description: 'Vestido de seda negra que fluye como sombra sobre el cuerpo.',
+            price: 890,
+            image: 'https://picsum.photos/seed/vacio-sombra/600/600',
+            trending: true
+        }, {
+            id: 2,
+            name: 'HUESO BLANCO',
+            description: 'Abrigo estructurado color marfil con líneas arquitectónicas afiladas.',
+            price: 1200,
+            image: 'https://picsum.photos/seed/vacio-hueso/600/600',
+            trending: true
+        }, {
+            id: 3,
+            name: 'SILENCIO ETERNO',
+            description: 'Suéter minimalista color carbón en la más fina lana merino.',
+            price: 560,
+            image: 'https://picsum.photos/seed/vacio-silencio/600/600',
+            trending: true
+        }, {
+            id: 4,
+            name: 'VACÍO NEGRO',
+            description: 'Pantalones negros asimétricos que redefinen la silueta.',
+            price: 720,
+            image: 'https://picsum.photos/seed/vacio-vacio/600/600',
+            trending: true
+        }, {
+            id: 5,
+            name: 'CENIZA',
+            description: 'Sobretodo de lana gris con una caída espectral y ligera.',
+            price: 1450,
+            image: 'https://picsum.photos/seed/vacio-ceniza/600/600',
+            trending: false
+        }, {
+            id: 6,
+            name: 'PIEL FANTASMA',
+            description: 'Blusa de seda translúcida que flota entre la presencia y la ausencia.',
+            price: 640,
+            image: 'https://picsum.photos/seed/vacio-piel/600/600',
+            trending: false
+        }, {
+            id: 7,
+            name: 'AUSENCIA',
+            description: 'Sudadera negra minimalista — el uniforme de la desaparición elegante.',
+            price: 480,
+            image: 'https://picsum.photos/seed/vacio-ausencia/600/600',
+            trending: true
+        }, {
+            id: 8,
+            name: 'LUTO ELEGANTE',
+            description: 'Bufanda de cachemira negra, increíblemente suave, como aire nocturno tejido.',
+            price: 350,
+            image: 'https://picsum.photos/seed/vacio-luto/600/600',
+            trending: false
+        }, {
+            id: 9,
+            name: 'NIEBLA',
+            description: 'Cárdigan drapeado gris que disuelve el límite entre la prenda y quien la porta.',
+            price: 620,
+            image: 'https://picsum.photos/seed/vacio-niebla/600/600',
+            trending: true
+        }, {
+            id: 10,
+            name: 'ECLIPSE',
+            description: 'Abrigo de lana negra con forro plateado oculto — oscuridad con un secreto.',
+            price: 1800,
+            image: 'https://picsum.photos/seed/vacio-eclipse/600/600',
+            trending: false
+        }];
+
+        async function loadProducts() {
+            try {
+                const response = await fetch('./products.json');
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const data = await response.json();
+                if (Array.isArray(data) && data.length > 0) {
+                    allProducts = data;
+                } else {
+                    throw new Error('Empty or invalid JSON');
+                }
+            } catch (err) {
+                console.warn('⚠ Using fallback products.', err.message);
+                allProducts = [...fallbackProducts];
+            }
+            renderAll();
+            updateNavActive();
+            if (currentYearSpan) currentYearSpan.textContent = new Date().getFullYear();
+        }
+
+        function createProductCard(product) {
+            const trans = translations[product.name] || { nameEn: '', descEn: '' };
+            const card = document.createElement('div');
+            card.className =
+                'card-ghost bg-[#0a0a0a] border border-[#1a1a1a] overflow-hidden flex flex-col group cursor-pointer';
+            card.setAttribute('data-product-id', product.id);
+
+            const imgContainer = document.createElement('div');
+            imgContainer.className = 'card-image aspect-square w-full overflow-hidden bg-[#060606]';
+            const img = document.createElement('img');
+            img.src = product.image;
+            img.alt = product.name;
+            img.loading = 'lazy';
+            img.className = 'w-full h-full object-cover';
+            img.onerror = function() {
+                this.src =
+                    'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" fill="%230a0a0a"><rect width="600" height="600"/><text x="300" y="310" text-anchor="middle" fill="%23222" font-size="20" font-family="serif">EL VACÍO</text></svg>';
+            };
+            imgContainer.appendChild(img);
+
+            const info = document.createElement('div');
+            info.className = 'p-3 sm:p-4 flex flex-col flex-grow space-y-1';
+
+            const nameEl = document.createElement('h3');
+            nameEl.className = 'font-serif text-sm sm:text-base lg:text-lg text-white tracking-[0.05em] leading-tight';
+            nameEl.textContent = product.name;
+
+            const nameEnEl = document.createElement('p');
+            nameEnEl.className = 'text-[11px] sm:text-xs text-[#666] italic';
+            nameEnEl.textContent = trans.nameEn || '';
+
+            const descEl = document.createElement('p');
+            descEl.className = 'text-[11px] sm:text-xs text-[#777] leading-relaxed mt-1 line-clamp-2 flex-grow hidden sm:block';
+            descEl.textContent = product.description;
+
+            const priceEl = document.createElement('p');
+            priceEl.className = 'text-sm sm:text-base text-white font-light tracking-[0.04em] mt-2 pt-1';
+            priceEl.textContent = '€' + product.price.toLocaleString('es-ES');
+
+            const btn = document.createElement('button');
+            btn.className =
+                'mt-3 w-full text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#c5a550] hover:text-white border border-[#1a1a1a] hover:border-[#c5a550] py-2.5 sm:py-3 transition-all duration-300 font-sans';
+            btn.textContent = 'Adquire';
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openCheckoutModal(product);
+            });
+
+            info.appendChild(nameEl);
+            info.appendChild(nameEnEl);
+            info.appendChild(descEl);
+            info.appendChild(priceEl);
+            info.appendChild(btn);
+            card.appendChild(imgContainer);
+            card.appendChild(info);
+
+            card.addEventListener('click', () => openCheckoutModal(product));
+
+            return card;
+        }
+
+        function renderGrid(container, products) {
+            container.innerHTML = '';
+            if (products.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'col-span-full text-center py-20 text-[#444] text-sm italic';
+                empty.textContent = 'Ninguna pieza disponible — No pieces available.';
+                container.appendChild(empty);
+                return;
+            }
+            products.forEach(product => {
+                container.appendChild(createProductCard(product));
+            });
+        }
+
+        function renderAll() {
+            const trending = allProducts.filter(p => p.trending === true);
+            renderGrid(gridTrending, trending);
+            renderGrid(gridArchive, allProducts);
+        }
+
+        function navigateTo(page) {
+            currentPage = page;
+            if (page === 'home') {
+                sectionHome.classList.remove('hidden');
+                sectionArchive.classList.add('hidden');
+                sectionHome.classList.remove('section-fade');
+                void sectionHome.offsetWidth;
+                sectionHome.classList.add('section-fade');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (page === 'archive') {
+                sectionHome.classList.add('hidden');
+                sectionArchive.classList.remove('hidden');
+                sectionArchive.classList.remove('section-fade');
+                void sectionArchive.offsetWidth;
+                sectionArchive.classList.add('section-fade');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (page === 'manifesto') {
+                sectionHome.classList.remove('hidden');
+                sectionArchive.classList.add('hidden');
+                sectionHome.classList.remove('section-fade');
+                void sectionHome.offsetWidth;
+                sectionHome.classList.add('section-fade');
+                currentPage = 'home';
+                setTimeout(() => {
+                    if (manifestoSection) {
+                        manifestoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 150);
+            }
+            updateNavActive();
+        }
+
+        function updateNavActive() {
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                const linkPage = link.getAttribute('data-page');
+                if (linkPage === currentPage) link.classList.add('active');
+            });
+        }
+
+        function openCheckoutModal(product) {
+            currentCheckoutProduct = product;
+            const trans = translations[product.name] || { nameEn: '', descEn: '' };
+            modalProductImage.src = product.image;
+            modalProductImage.alt = product.name;
+            modalProductName.textContent = product.name;
+            modalProductNameEn.textContent = trans.nameEn || '';
+            modalProductDescription.textContent = product.description;
+            modalProductPrice.textContent = '€' + product.price.toLocaleString('es-ES');
+            formName.value = '';
+            formWhatsapp.value = '';
+            formAddress.value = '';
+            checkoutModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            modalProductImage.onerror = function() {
+                this.src =
+                    'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" fill="%230a0a0a"><rect width="600" height="600"/><text x="300" y="310" text-anchor="middle" fill="%23222" font-size="20" font-family="serif">EL VACÍO</text></svg>';
+            };
+        }
+
+        function closeModal() {
+            checkoutModal.classList.add('hidden');
+            document.body.style.overflow = '';
+            currentCheckoutProduct = null;
+        }
+
+        function closeModalOutside(event) {
+            if (event.target === checkoutModal) closeModal();
+        }
+
+        function handleCheckout(event) {
+            event.preventDefault();
+            if (!currentCheckoutProduct) return;
+            const name = formName.value.trim();
+            const whatsapp = formWhatsapp.value.trim();
+            const address = formAddress.value.trim();
+            if (!name) { formName.focus(); alert('Por favor, ingrese su nombre completo. / Please enter your full name.'); return; }
+            if (!whatsapp) { formWhatsapp.focus(); alert('Por favor, ingrese su número de WhatsApp. / Please enter your WhatsApp number.'); return; }
+            if (!address) { formAddress.focus(); alert('Por favor, ingrese su dirección completa. / Please enter your full address.'); return; }
+
+            const productName = currentCheckoutProduct.name;
+            const price = '€' + currentCheckoutProduct.price.toLocaleString('es-ES');
+            const rawMessage =
+                `Order for ${productName}. Amount: ${price}. Name: ${name}. Address: ${address}. Transaction screenshot attached below.`;
+            const encodedMessage = encodeURIComponent(rawMessage);
+            const whatsappNumber = '91XXXXXXXXXX';
+            const waUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+            window.open(waUrl, '_blank');
+            setTimeout(() => closeModal(), 400);
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !checkoutModal.classList.contains('hidden')) closeModal();
+        });
+
+        loadProducts().then(() => {
+            console.log('✓ EL VACÍO — Golden Noir ready.');
+        });
+
+        window.navigateTo = navigateTo;
+        window.closeModal = closeModal;
+        window.closeModalOutside = closeModalOutside;
+        window.handleCheckout = handleCheckout;
+    })();
+</script>
+</body>
+</html>
