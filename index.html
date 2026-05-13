@@ -671,7 +671,7 @@ onclick="event.stopPropagation()">
             const rawMessage =
                 `Order for ${productName}. Amount: ${price}. Name: ${name}. Address: ${address}. Transaction screenshot attached below.`;
             const encodedMessage = encodeURIComponent(rawMessage);
-            const whatsappNumber = '91XXXXXXXXXX';
+            const whatsappNumber = '918812826218';
             const waUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
             window.open(waUrl, '_blank');
             setTimeout(() => closeModal(), 400);
